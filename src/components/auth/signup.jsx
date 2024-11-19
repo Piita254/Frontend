@@ -6,13 +6,12 @@ function Signup() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('');
   const navigate = useNavigate();
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    
     try {
       // Example API call to create a new user
       const response = await fetch('https://e-learn-ncux.onrender.com/api/users', {
@@ -20,13 +19,12 @@ function Signup() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email, password, role }), // Include role in the request
       });
 
       if (response.ok) {
         const userData = await response.json();
-        setUser(userData);
-        navigate('/');
+        navigate('/'); // Redirect to homepage or another page after successful signup
       } else {
         const errorData = await response.json();
         alert(errorData.message); // Show error message
@@ -89,6 +87,23 @@ function Signup() {
             />
           </div>
 
+          <div>
+            <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-1">
+              Role
+            </label>
+            <select
+              id="role"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              required
+            >
+              <option value="">Select a Role</option>
+              <option value="admin">Admin</option>
+              <option value="learner">Learner</option>
+            </select>
+          </div>
+
           <button
             type="submit"
             className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-indigo-700 transition-colors"
@@ -101,7 +116,7 @@ function Signup() {
           <p className="text-gray-600">
             Already have an account?{' '}
             <a href="/login" className="text-indigo-600 hover:text-indigo-700">
-              Sign in
+              Login
             </a>
           </p>
         </div>
@@ -110,4 +125,4 @@ function Signup() {
   );
 }
 
-export default Signup
+export default Signup;

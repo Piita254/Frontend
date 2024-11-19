@@ -1,6 +1,6 @@
 import React from 'react';
 import { Sparkles, TrendingUp, Clock } from 'lucide-react';
-import LearningPathList from './LearningPathList';
+import LearnerDashboard from '../learner/LearnerDashboard';
 
 function Home() {
   return (
@@ -39,7 +39,7 @@ function Home() {
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Popular Learning Paths</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Add content or cards here when ready */}
-          <LearningPathList/>
+          <LearnerDashboard/>
         </div>
       </section>
     </div>

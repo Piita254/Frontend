@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-const ModuleDetail = () => {
+const Modules= () => {
     const { id } = useParams(); // `id` is the module_id from the URL
     const [module, setModule] = useState(null);
     const [error, setError] = useState(null);
@@ -85,4 +85,4 @@ const ModuleDetail = () => {
     );
 };
 
-export default ModuleDetail;
+export default Modules;
