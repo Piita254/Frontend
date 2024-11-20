@@ -1,6 +1,6 @@
 import React from 'react';
 import { Sparkles, TrendingUp, Clock } from 'lucide-react';
-import LearningPathList from './LearningPathList';
+import LearningPathList from '../learner/LearningPathList';
 
 function Home() {
   return (

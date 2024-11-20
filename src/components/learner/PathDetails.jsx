@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { BookOpen, CheckCircle, Lock } from 'lucide-react';
 import Quiz from './Quiz';
-import Ratings from './Ratings'; // Import Rating component
+import Ratings from './Ratings'; // Correct import for Rating component
 import Comments from './Comments'; // Import Comments component
 
 function PathDetails() {
@@ -122,7 +122,7 @@ function PathDetails() {
                 {/* Add Rating and Comments components */}
                 <div className="mt-8">
                   <h2 className="text-xl font-bold mb-4">Rate this Path</h2>
-                  <Rating resourceId={pathId} />
+                  <Ratings resourceId={pathId} />
                 </div>
                 <div className="mt-8">
                   <h2 className="text-xl font-bold mb-4">Comments</h2>

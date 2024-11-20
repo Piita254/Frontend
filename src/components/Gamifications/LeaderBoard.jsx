@@ -1,12 +1,44 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Trophy, Medal } from 'lucide-react';
+import axios from 'axios';
 
 function LeaderBoard() {
-  const topUsers = [
-    { id: 1, name: 'Sarah Chen', points: 12500, badge: 'Master Contributor' },
-    { id: 2, name: 'Alex Kumar', points: 11200, badge: 'Learning Champion' },
-    { id: 3, name: 'Maria Garcia', points: 10800, badge: 'Knowledge Seeker' },
-  ];
+  const [topUsers, setTopUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      try {
+        setLoading(true);  // Set loading to true while fetching
+        setError(null); // Reset any previous errors
+        const response = await axios.get('https://e-learn-ncux.onrender.com/api/leaderboard');
+        
+        // Check if response contains the 'leaderboard' key and if it's an array
+        if (response.data && Array.isArray(response.data.leaderboard)) {
+          setTopUsers(response.data.leaderboard); // Use the leaderboard array
+        } else {
+          setError('Unexpected data format received.');
+        }
+      } catch (error) {
+        console.error('Error fetching leaderboard:', error);
+        setError('Failed to fetch leaderboard data.');
+      } finally {
+        setLoading(false);  // Set loading to false after the fetch completes
+      }
+    };
+
+    fetchLeaderboard();
+  }, []);
+
+  // Render loading or error messages before displaying the leaderboard
+  if (loading) {
+    return <p>Loading leaderboard...</p>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
+  }
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -20,7 +52,7 @@ function LeaderBoard() {
         <div className="p-6">
           {topUsers.map((user, index) => (
             <div
-              key={user.id}
+              key={user.id || `${user.name}-${index}`}  // Ensure unique key
               className="flex items-center justify-between py-4 border-b last:border-0"
             >
               <div className="flex items-center space-x-4">
@@ -46,4 +78,5 @@ function LeaderBoard() {
     </div>
   );
 }
+
 export default LeaderBoard;

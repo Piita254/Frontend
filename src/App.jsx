@@ -1,35 +1,97 @@
+import React, { useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import React from 'react'
-import Home from './components/Home'
-import { Navbar } from './components/Navbar'
-import LeaderBoard from './components/LeaderBoard';
+import { UserContext } from './components/auth/UserContext';
+import Home from './components/shared/Home';
+import Navbar from './components/shared/Navbar';
+import Footer from './components/shared/Footer';
+import LeaderBoard from './components/Gamifications/LeaderBoard';
 import Login from './components/auth/Login';
-import PathDetails from './components/PathDetails';
-import Signup from './components/auth/signup'
-import ModuleDetail from './components/Modules';
+import Signup from './components/auth/signup';
+import PathDetails from './components/learner/PathDetails';
+import ModuleDetail from './components/learner/Modules';
+import UserProfile from './components/shared/UserProfile';
+import PointsAchievements from './components/Gamifications/PointsAchievements';
+import Comments from './components/learner/Comments';
+import ResourcePage from './components/learner/ResourcePage';
 
 function App() {
+  const { user } = useContext(UserContext); // Access user from context
+
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50">
-        <Navbar />
-        <main className="max-w-7xl mx-auto px-4 py-8">
-          <Routes>
-            <Route path="/" element={<Home/>} />
-            <Route path="/leaderboard" element={<LeaderBoard/>} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup/>} />
-            <Route path="/learning_paths/:pathId" element={<PathDetails/>} />
-            <Route path="/module_detail/:id" element={<ModuleDetail/>} />
-            
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/login" element={<Login />} />
 
+        {/* Protected Routes */}
+        <Route path="/" element={<LearnerDashboard />} />
+        
+        {/* Learner Routes */}
+        <Route
+          path="/learner-dashboard"
+          element={
+            <ProtectedRoute allowedRoles={['Learner']}>
+              <LearnerDashboard />
+            </ProtectedRoute>
+          
+          }
+        />
 
+        {/* Contributor Routes */}
+        <Route
+          path="/contributer-dashboard"
+          element={
+            <ProtectedRoute allowedRoles={['Contributor']}>
+              <ContributerDashboard />
+            </ProtectedRoute>
+          }
+        />
 
-          </Routes>
-        </main>
-      </div>
+        <Route
+          path="/create-learning-path"
+          element={
+            <ProtectedRoute allowedRoles={['Contributor']}>
+              <CreateLearningPath />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/edit-learning-path/:id"
+          element={
+            <ProtectedRoute allowedRoles={['Contributor']}>
+              <EditLearningPathForm />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Common Routes for All Users */}
+        <Route
+          path="/modules/:pathId"
+          element={
+            <ProtectedRoute allowedRoles={['Learner', 'Contributor']}>
+              <Modules />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="/path-details/:id"
+          element={<PathDetails />}
+        />
+
+        <Route
+          path="/quiz/:moduleId"
+          element={<Quiz />}
+        />
+
+        <Route
+          path="/resource-detail/:id"
+          element={<ResourceDetail />}
+        />
+      </Routes>
     </Router>
-  )
+  );
 }
 
-export default App
+export default App;
