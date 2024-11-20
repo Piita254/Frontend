@@ -3,36 +3,36 @@ import { useNavigate } from 'react-router-dom';
 import { GraduationCap } from 'lucide-react';
 
 function Signup() {
-  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('Learner');
   const navigate = useNavigate();
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    
     try {
-      // Example API call to create a new user
-      const response = await fetch('https://e-learn-ncux.onrender.com/api/users', {
+      // API call to create a new user
+      const response = await fetch('https://e-learn-ncux.onrender.com/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ username, email, password, role }),
       });
 
       if (response.ok) {
         const userData = await response.json();
-        setUser(userData);
-        navigate('/');
+
+        // Redirect the user to the login page
+        navigate('/login');
       } else {
         const errorData = await response.json();
         alert(errorData.message); // Show error message
       }
     } catch (error) {
-      console.error("Error during signup:", error);
+      console.error('Error during signup:', error);
       alert('An error occurred during signup.');
     }
   };
@@ -48,14 +48,14 @@ function Signup() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-              Full Name
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+              Username
             </label>
             <input
               type="text"
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               required
             />
@@ -89,6 +89,22 @@ function Signup() {
             />
           </div>
 
+          <div>
+            <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-1">
+              Account Type
+            </label>
+            <select
+              id="role"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+            >
+              <option value="Learner">Learner</option>
+              <option value="Contributor">Contributor</option>
+              
+            </select>
+          </div>
+
           <button
             type="submit"
             className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-indigo-700 transition-colors"
@@ -110,4 +126,4 @@ function Signup() {
   );
 }
 
-export default Signup
+export default Signup;

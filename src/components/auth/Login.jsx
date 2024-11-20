@@ -1,39 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GraduationCap } from 'lucide-react';
 
 function Login() {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);  // Added state for error message
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/');  // Redirect to home if already logged in
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Replace this mock login with an actual API call
     try {
-      // Make an API call to authenticate user
-      const response = await fetch('/api/login', {
+      // Make an API call to authenticate user with username and password
+      const response = await fetch('https://e-learn-ncux.onrender.com/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }), // Send username instead of email
       });
 
       if (!response.ok) {
-        throw new Error('Login failed');
+        // If response is not okay, throw error with detailed message
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
       }
 
       const data = await response.json();
-      // Save user data in local storage or context
+      // Save user data and token in local storage
       localStorage.setItem('user', JSON.stringify(data));
+      localStorage.setItem('token', data.token);  // Assuming the token is sent back
 
       // Navigate to home page or dashboard
       navigate('/');
     } catch (error) {
       console.error('Error logging in:', error);
-      // Handle login error (e.g., show error message to user)
+      setError(error.message);  // Update state to show error message
     }
   };
 
@@ -49,16 +59,16 @@ function Login() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label
-              htmlFor="email"
+              htmlFor="username"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Email
+              Username
             </label>
             <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               required
             />
@@ -89,6 +99,12 @@ function Login() {
           </button>
         </form>
 
+        {error && (
+          <div className="mt-4 text-red-600 text-center">
+            <p>{error}</p>  {/* Display error message */}
+          </div>
+        )}
+
         <div className="mt-6 text-center">
           <p className="text-gray-600">
             Don't have an account?{' '}
@@ -102,4 +118,4 @@ function Login() {
   );
 }
 
-export default Login
+export default Login;

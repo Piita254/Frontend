@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { BookOpen, CheckCircle, Lock } from 'lucide-react';
 import Quiz from './Quiz';
-import Modules from './Modules';
+import Ratings from './Ratings'; // Import Rating component
+import Comments from './Comments'; // Import Comments component
 
 function PathDetails() {
   const { pathId } = useParams();
@@ -63,28 +64,27 @@ function PathDetails() {
           <div className="lg:col-span-1">
             <h2 className="text-xl font-bold mb-4">Modules</h2>
             <div className="space-y-2">
-  {path.modules?.map((module, index) => (
-    <Link
-      key={module.id}
-      to={`/modules/${module.id}`}
-      className={`w-full text-left p-4 rounded-lg flex items-center justify-between ${
-        index === activeModuleIndex
-          ? 'bg-indigo-50 text-indigo-600'
-          : 'hover:bg-gray-50'
-      }`}
-    >
-      <span className="flex items-center">
-        {index <= activeModuleIndex ? (
-          <CheckCircle className="h-5 w-5 mr-2" />
-        ) : (
-          <Lock className="h-5 w-5 mr-2" />
-        )}
-        {module.title}
-      </span>
-    </Link>
-  ))}
-</div>
-
+              {path.modules?.map((module, index) => (
+                <Link
+                  key={module.id}
+                  to={`/modules/${module.id}`}
+                  className={`w-full text-left p-4 rounded-lg flex items-center justify-between ${
+                    index === activeModuleIndex
+                      ? 'bg-indigo-50 text-indigo-600'
+                      : 'hover:bg-gray-50'
+                  }`}
+                >
+                  <span className="flex items-center">
+                    {index <= activeModuleIndex ? (
+                      <CheckCircle className="h-5 w-5 mr-2" />
+                    ) : (
+                      <Lock className="h-5 w-5 mr-2" />
+                    )}
+                    {module.title}
+                  </span>
+                </Link>
+              ))}
+            </div>
           </div>
 
           <div className="lg:col-span-2">
@@ -119,6 +119,15 @@ function PathDetails() {
                 ) : (
                   <div>No module selected</div>
                 )}
+                {/* Add Rating and Comments components */}
+                <div className="mt-8">
+                  <h2 className="text-xl font-bold mb-4">Rate this Path</h2>
+                  <Rating resourceId={pathId} />
+                </div>
+                <div className="mt-8">
+                  <h2 className="text-xl font-bold mb-4">Comments</h2>
+                  <Comments resourceId={pathId} />
+                </div>
               </div>
             ) : (
               <Quiz
