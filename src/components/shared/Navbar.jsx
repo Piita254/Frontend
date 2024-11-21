@@ -1,9 +1,10 @@
-import React from 'react';
-import { GraduationCap, Trophy, Search, User } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
+import { GraduationCap, User } from "lucide-react";
+import { useUser } from "../../context/UserContext";
 
-export function Navbar() {
-  const role = localStorage.getItem('role'); // Fetch user role from localStorage
+const Navbar = () => {
+  const { user } = useUser(); // Get the user context
 
   return (
     <nav className="bg-indigo-600 text-white shadow-lg">
@@ -17,72 +18,34 @@ export function Navbar() {
             </Link>
           </div>
 
-          {/* Search Bar */}
-          <div className="flex-1 max-w-xl px-8">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search learning paths..."
-                className="w-full bg-indigo-500 text-white placeholder-indigo-200 rounded-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-white"
-              />
-              <Search className="absolute right-3 top-2.5 h-5 w-5 text-indigo-200" />
-            </div>
-          </div>
-
           {/* Navigation Links */}
           <div className="flex items-center space-x-4">
-            {/* Leaderboard Link */}
-            <div className="hover:text-indigo-200">
-              <Link to="/leaderboard" className="hover:text-indigo-200">
-                <Trophy className="h-6 w-6" />
-              </Link>
-            </div>
-
             {/* Role-Based Links */}
-            {role === 'admin' && (
-              <Link
-                to="/admin/dashboard"
-                className="hover:text-indigo-200 font-medium"
-              >
+            {user?.role === "Admin" && (
+              <Link to="/admin" className="hover:text-indigo-200 font-medium">
                 Admin Dashboard
               </Link>
             )}
-            {role === 'contributer' && (
-              <>
-                <Link
-                  to="/contributer/dashboard"
-                  className="hover:text-indigo-200 font-medium"
-                >
-                  Contributor Dashboard
-                </Link>
-                <Link
-                  to="/contributer/create"
-                  className="hover:text-indigo-200 font-medium"
-                >
-                  Create Path
-                </Link>
-              </>
+            {user?.role === "Contributor" && (
+              <Link
+                to="/contributer"
+                className="hover:text-indigo-200 font-medium"
+              >
+                Contributor Dashboard
+              </Link>
             )}
-            {role === 'learner' && (
-              <>
-                <Link
-                  to="/learner/paths"
-                  className="hover:text-indigo-200 font-medium"
-                >
-                  Learning Paths
-                </Link>
-                <Link
-                  to="/learner/discussion"
-                  className="hover:text-indigo-200 font-medium"
-                >
-                  Discussions
-                </Link>
-              </>
+            {user?.role === "Learner" && (
+              <Link
+                to="/learner"
+                className="hover:text-indigo-200 font-medium"
+              >
+                Learner Dashboard
+              </Link>
             )}
 
             {/* Authentication Links */}
             <div>
-              {role ? (
+              {user ? (
                 <div className="flex items-center space-x-3">
                   <div className="hover:text-indigo-200">
                     <User className="h-6 w-6" />
@@ -90,8 +53,9 @@ export function Navbar() {
                   <button
                     className="bg-white text-indigo-600 px-4 py-2 rounded-full font-medium hover:bg-indigo-50"
                     onClick={() => {
+                      // Clear user context or handle logout logic
                       localStorage.clear();
-                      window.location.href = '/login';
+                      window.location.href = "/login";
                     }}
                   >
                     Logout
@@ -109,4 +73,5 @@ export function Navbar() {
     </nav>
   );
 };
+
 export default Navbar;
