@@ -1,18 +1,22 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LearnerDashboard from './components/learner/LearnerDashboard';
-import ContributerDashboard from './components/contributer/ContributerDashboard';
-import CreateLearningPath from './components/contributer/CreateLearningPath';
-import EditLearningPathForm from './components/contributer/EditLearningPathForm';
-import Modules from './components/learner/Modules';
+import { UserContext } from './components/auth/UserContext';
+import Home from './components/shared/Home';
+import Navbar from './components/shared/Navbar';
+import Footer from './components/shared/Footer';
+import LeaderBoard from './components/Gamifications/LeaderBoard';
+import Login from './components/auth/Login';
+import Signup from './components/auth/signup';
 import PathDetails from './components/learner/PathDetails';
-import Quiz from './components/learner/Quiz';
-import ResourceDetail from './components/learner/ResourceDetail';
-import Login from './components/auth/Login'
-import ProtectedRoute from './components/shared/ProtectedRoute';
-// import Unauthorized from './components/Unauthorized'; // remember to add Unauthorized page
+import ModuleDetail from './components/learner/Modules';
+import UserProfile from './components/shared/UserProfile';
+import PointsAchievements from './components/Gamifications/PointsAchievements';
+import Comments from './components/learner/Comments';
+import ResourcePage from './components/learner/ResourcePage';
 
 function App() {
+  const { user } = useContext(UserContext); // Access user from context
+
   return (
     <Router>
       <Routes>
@@ -29,6 +33,7 @@ function App() {
             <ProtectedRoute allowedRoles={['Learner']}>
               <LearnerDashboard />
             </ProtectedRoute>
+          
           }
         />
 
@@ -90,4 +95,3 @@ function App() {
 }
 
 export default App;
-
